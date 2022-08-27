@@ -4,9 +4,15 @@ html {
     font-family: 'Roboto', cursive;
 }
 
+.titulo{
+    color: white;
+    text-align: center;
+}
+
 .conteudo {
     padding: 10vh 3em 0;
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
     gap: 2em;
 }
@@ -128,5 +134,31 @@ html {
     height: 40px;
     Background: #C5965F;
     font-weight: 400;
+}
+
+.rodape{ border-top: 1px solid #333;
+    bottom: 0;
+    left: 0;
+    height: 40px;
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.rodape p{
+    color: white;
+}
+
+.rodape p strong{
+    color: red;
+}
+
+
+@media screen and (min-width:768px){
+    .conteudo{
+        display: flex;
+        flex-direction: row;
+    }
 }
 

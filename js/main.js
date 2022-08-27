@@ -28,9 +28,10 @@ form.addEventListener('submit', (event) => {
     if(!!existe){
         itemAtual.id = existe.id;
         atualizaElemento(itemAtual);
+        itens[itens.findIndex(elemento => elemento.id === existe.id)] = itemAtual;
     }else{
     
-    itemAtual.id = itens.length;
+    itemAtual.id = itens[itens.length-1] ? (itens[itens.length-1]).id + 1 : 0;
 
      criaElemento(itemAtual);
      itens.push((itemAtual));
@@ -60,6 +61,8 @@ function criaElemento(item){
     //para colocar um elemento dentro do outro, é necessario utilizar a função appendChild;
     novoItem.appendChild(numeroItem);
     novoItem.innerHTML += item.nome
+    //criando o botao de deletar
+    novoItem.appendChild(botaoDeleta(item.id));
 
     lista.appendChild(novoItem);
 
@@ -69,3 +72,21 @@ function criaElemento(item){
     //perando a tag strong => 
     document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
    }
+
+   function botaoDeleta(id) {
+    const elementoBotao = document.createElement("button");
+    elementoBotao.innerText = "X";
+
+    elementoBotao.addEventListener("click", function() {
+        deletaElemento(this.parentNode, id);
+    });
+
+    return elementoBotao;
+   }
+
+   function deletaElemento(tag, id) {
+        tag.remove();
+        //remover item do array
+        itens.splice(itens.findIndex(elemento => elemento.id === id),1);
+        localStorage.setItem('itens', JSON.stringify(itens));
+}
