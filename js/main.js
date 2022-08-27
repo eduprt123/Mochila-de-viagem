@@ -1,79 +1,33 @@
-const form = document.getElementById("novoItem")
-const lista = document.getElementById("lista")
-const itens = JSON.parse(localStorage.getItem("itens")) || []
+//capturando o formulario:
+const form = document.getElementById("novoItem");
 
-itens.forEach( (elemento) => {
-    criaElemento(elemento)
-} )
+//capturando o evento do form(submit) => Vamos capturar os dados do formulário quando o botao for clicado;
+form.addEventListener('submit', (event) => {
+    //previnindo o comportamento padrão do submit(recarregar);
+    event.preventDefault();
+    //pegando cada elemento através do objeto elements;
+    const nome = event.target.elements['nome'].value;
+    const quantidade = event.target.elements['quantidade'].value;
 
-form.addEventListener("submit", (evento) => {
-    evento.preventDefault()
-
-    const nome = evento.target.elements['nome']
-    const quantidade = evento.target.elements['quantidade']
-
-    const existe = itens.find( elemento => elemento.nome === nome.value )
-
-    const itemAtual = {
-        "nome": nome.value,
-        "quantidade": quantidade.value
-    }
-
-    if (existe) {
-        itemAtual.id = existe.id
-        
-        atualizaElemento(itemAtual)
-
-        itens[itens.findIndex(elemento => elemento.id === existe.id)] = itemAtual
-    } else {
-        itemAtual.id = itens[itens.length -1] ? (itens[itens.length-1]).id + 1 : 0;
-
-        criaElemento(itemAtual)
-
-        itens.push(itemAtual)
-    }
-
-    localStorage.setItem("itens", JSON.stringify(itens))
-
-    nome.value = ""
-    quantidade.value = ""
+    criaElemento(nome, quantidade);
 })
 
-function criaElemento(item) {
-    const novoItem = document.createElement("li")
-    novoItem.classList.add("item")
+//criando uma função para criar um elemento:
+function criaElemento(nome, quantidade){
+    //Iremos criar um elemento html seguindo o padrão => <li class="item"><strong>7</strong>Camisas</li>
+    const novoItem = document.createElement('li'); //criando novo item;
+    //adicionando classe ao novo item:
+    novoItem.classList.add('item');
 
-    const numeroItem = document.createElement("strong")
-    numeroItem.innerHTML = item.quantidade
-    numeroItem.dataset.id = item.id
-    novoItem.appendChild(numeroItem)
-    
-    novoItem.innerHTML += item.nome
+    //criando a tag strong:
+    const numeroItem = document.createElement('strong');
+    //atribuindo o valor da quantidade:
+    numeroItem.innerHTML = quantidade;
+    //para colocar um elemento dentro do outro, é necessario utilizar a função appendChild;
+    novoItem.appendChild(numeroItem);
+    novoItem.innerHTML += nome
 
-    novoItem.appendChild(botaoDeleta(item.id))
-
-    lista.appendChild(novoItem)
-}
-
-function atualizaElemento(item) {
-    document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade
-}
-
-function botaoDeleta(id) {
-    const elementoBotao = document.createElement("button")
-    elementoBotao.innerText = "X"
-
-    elementoBotao.addEventListener("click", function() {
-        deletaElemento(this.parentNode, id)
-    })
-
-    return elementoBotao
-}
-
-function deletaElemento(tag, id) {
-    tag.remove()
-
-    itens.splice(itens.findIndex(elemento => elemento.id === id), 1)
-
-    localStorage.setItem("itens", JSON.stringify(itens))
+    //pegando a lista
+    const lista = document.getElementById('lista');
+    lista.appendChild(novoItem);
 }
