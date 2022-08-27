@@ -17,15 +17,25 @@ form.addEventListener('submit', (event) => {
     const nome = event.target.elements['nome'];
     const quantidade = event.target.elements['quantidade'];
 
-        //setando os dados em localStorage:
-    const itemAtual = {
+      //setando os dados em localStorage:
+      const itemAtual = {
         'nome': nome.value,
         'quantidade': quantidade.value
     }
+    //verificando se o item adicionado ja existe no array;
+    const existe = itens.find(item => item.nome === nome.value);
+    //se existir => atualiza o item
+    if(!!existe){
+        itemAtual.id = existe.id;
+        atualizaElemento(itemAtual);
+    }else{
     
-    criaElemento(itemAtual);
+    itemAtual.id = itens.length;
 
+     criaElemento(itemAtual);
      itens.push((itemAtual));
+    }
+
      localStorage.setItem('itens', JSON.stringify(itens));
 
     //limpando formulario apos criar o elemento:
@@ -45,10 +55,17 @@ function criaElemento(item){
     const numeroItem = document.createElement('strong');
     //atribuindo o valor da quantidade:
     numeroItem.innerHTML = item.quantidade;
+    //criando um id para o elemento que será criado:
+    numeroItem.dataset.id = item.id
     //para colocar um elemento dentro do outro, é necessario utilizar a função appendChild;
     novoItem.appendChild(numeroItem);
     novoItem.innerHTML += item.nome
 
     lista.appendChild(novoItem);
 
+   }
+
+   function atualizaElemento(item){
+    //perando a tag strong => 
+    document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
    }
